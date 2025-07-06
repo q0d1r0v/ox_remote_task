@@ -15,7 +15,8 @@ datasource db {
 
 model Company {
   id        Int    @id @default(autoincrement())
-  subdomain String @unique
+  subdomain String
+  token     String
   users     User[] @relation("UserCompanies")
 }
 

@@ -24,7 +24,10 @@ export class RolesGuard implements CanActivate {
     const user = request.user as { role?: string };
 
     if (!user || !requiredRoles.includes(user.role ?? '')) {
-      throw new ForbiddenException('Ruxsat yo‘q (Admin only)');
+      // ⚠ Xatolik xabarini dinamik qilamiz
+      throw new ForbiddenException(
+        `Ruxsat yo‘q (${requiredRoles.join(', ')} only)`,
+      );
     }
 
     return true;

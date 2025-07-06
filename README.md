@@ -1,99 +1,156 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# OX GROUP API Documentation
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Bu API NestJS framework yordamida yaratilgan bo'lib, OX tizimi bilan integratsiya qilish uchun mo'ljallangan.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📋 Texnologiyalar
 
-## Description
+- **NestJS** - Asosiy framework
+- **Prisma ORM** - Ma'lumotlar bazasi bilan ishlash
+- **JWT** - Autentifikatsiya
+- **class-validator** - DTO validatsiya
+- **Custom Decorators** - @AdminOnly(), @ManagerOnly()
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🔐 Autentifikatsiya
 
-## Project setup
+### 1. Login
 
-```bash
-$ yarn install
+Foydalanuvchi tizimga kirishni boshlaydi.
+
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
 ```
 
-## Compile and run the project
+**Response:**
 
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+```json
+{
+  "otp": "846435",
+  "message": "for test with otp code"
+}
 ```
 
-## Run tests
+**Xususiyatlar:**
 
-```bash
-# unit tests
-$ yarn run test
+- Agar foydalanuvchi mavjud bo'lmasa, yangi foydalanuvchi yaratiladi
+- Default role: `manager`
+- OTP generatsiya qilinadi (real yuborish shart emas)
 
-# e2e tests
-$ yarn run test:e2e
+### 2. OTP Tekshirish
 
-# test coverage
-$ yarn run test:cov
+OTP orqali autentifikatsiyani yakunlash.
+
+```http
+POST /auth/verify
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "otp": "123456"
+}
 ```
 
-## Deployment
+**Response:**
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoicW9kaXJvdm95YmVram9uMDhAZ21haWwuY29tIiwicm9sZSI6Ik1BTkFHRVIiLCJpYXQiOjE3NTE4MjcyODgsImV4cCI6MTc1MTkxMzY4OH0.DLfcHNDR58DMPXRbQoUmf2IIYuphJs7kc5utsJ-Va3Y"
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🏢 Kompaniya Boshqaruvi
 
-## Resources
+### 1. Kompaniya Ro'yxatdan O'tkazish
 
-Check out a few resources that may come in handy when working with NestJS:
+OX loyihasiga tegishli kompaniyani qo'shish.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```http
+POST /api/register-company
+Content-Type: application/json
+Authorization: Bearer <your-jwt-token>
 
-## Support
+{
+  "token": "Bearer xyz",
+  "subdomain": "demo"
+}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**Response (Yangi kompaniya):**
 
-## Stay in touch
+```json
+{
+  "message": "Yangi kompaniya yaratildi va siz admin bo‘ldingiz"
+}
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**Response (Mavjud kompaniya):**
 
-## License
+```json
+{
+  "message": "Siz kompaniyaga manager sifatida biriktirildingiz"
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-# ox_remote_task
+**Jarayon:**
+
+1. OX'dagi `/profile` endpointga token orqali so'rov yuboriladi
+2. Token validatsiya qilinadi
+3. Kompaniya subdomain bo'yicha bazada tekshiriladi:
+   - **Mavjud emas**: Kompaniya qo'shiladi, foydalanuvchiga `admin` roli beriladi
+   - **Mavjud**: Foydalanuvchi shu kompaniyaga `manager` sifatida biriktiriladi
+
+### 2. Kompaniya O'chirish
+
+```http
+DELETE /api//delete-company/:id
+Authorization: Bearer <your-jwt-token>
+```
+
+**Response:**
+
+```json
+{
+  "message": "Kompaniya o‘chirildi"
+}
+```
+
+**Cheklovlar:**
+
+- Faqat `admin` roldagi foydalanuvchilar
+- Faqat o'zi qo'shgan kompaniyani o'chira oladi
+
+## 📦 Mahsulotlar
+
+### 1. Mahsulotlar Ro'yxati
+
+Foydalanuvchiga biriktirilgan kompaniya orqali mahsulotlar ro'yxatini olish.
+
+```http
+GET /api/products?page=1&size=10
+Authorization: Bearer <your-jwt-token>
+```
+
+**Query Parameters:**
+
+- `page` (optional): Sahifa raqami (default: 1)
+- `size` (optional): Sahifa hajmi (default: 10, max: 20)
+
+**Response:**
+
+```json
+{
+  "data": [],
+  "total_count": 0,
+  "page": 1
+}
+```
+
+**Xususiyatlar:**
+
+- Faqat `manager` roldagi foydalanuvchilar foydalanishi mumkin
+- Foydalanuvchiga biriktirilgan kompaniya subdomain va token orqali OX'dagi `/variations` endpointga so'rov yuboriladi
+- `size` 20 dan katta bo'lsa, 400 xatolik qaytaradi

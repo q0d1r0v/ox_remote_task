@@ -24,7 +24,7 @@ export class CompanyService {
       if (!res.data) throw new UnauthorizedException('Token noto‘g‘ri');
 
       // Kompaniya mavjudmi?
-      const existing = await this.prisma.company.findUnique({
+      const existing = await this.prisma.company.findFirst({
         where: { subdomain },
       });
 
@@ -38,6 +38,7 @@ export class CompanyService {
         await this.prisma.company.create({
           data: {
             subdomain,
+            token: oxToken,
             users: {
               connect: { id: userId },
             },
@@ -54,8 +55,9 @@ export class CompanyService {
         return { message: 'Yangi kompaniya yaratildi va siz admin bo‘ldingiz' };
       } else {
         await this.prisma.company.update({
-          where: { subdomain },
+          where: { id: existing.id },
           data: {
+            token: oxToken,
             users: {
               connect: { id: userId },
             },
