@@ -63,6 +63,13 @@ export class CompanyService {
             },
           },
         });
+        console.log(userId);
+        await this.prisma.user.update({
+          where: { id: userId },
+          data: {
+            role: 'MANAGER',
+          },
+        });
 
         return { message: 'Siz kompaniyaga manager sifatida biriktirildingiz' };
       }
