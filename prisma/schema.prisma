@@ -5,7 +5,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  // output qatorini o'chiring yoki comment qiling
 }
 
 datasource db {

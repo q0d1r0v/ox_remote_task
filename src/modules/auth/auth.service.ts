@@ -21,16 +21,14 @@ export class AuthService {
       user = await this.prisma.user.create({
         data: {
           email,
-          role: Role.MANAGER, // default role
+          role: Role.MANAGER,
         },
       });
     }
 
-    // OTP generatsiya
     const otp = this.generateOtp();
-    const expiry = new Date(Date.now() + 5 * 60 * 1000); // 5 daqiqa
+    const expiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minute
 
-    // OTP'ni saqlash
     await this.prisma.user.update({
       where: { email },
       data: {
@@ -53,7 +51,6 @@ export class AuthService {
       throw new UnauthorizedException('OTP noto‘g‘ri yoki eskirgan');
     }
 
-    // JWT token yaratish
     const payload = {
       sub: user.id,
       email: user.email,
@@ -62,7 +59,6 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload);
 
-    // OTP'ni bazadan o‘chirib yuboramiz
     await this.prisma.user.update({
       where: { email },
       data: {

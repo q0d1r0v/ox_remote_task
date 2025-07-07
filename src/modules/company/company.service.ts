@@ -13,7 +13,6 @@ export class CompanyService {
 
   async registerCompany(userId: number, subdomain: string, oxToken: string) {
     try {
-      // OX API bilan tekshirish
       const res = await axios.get(`https://${subdomain}.ox-sys.com/profile`, {
         headers: {
           Accept: 'application/json',
@@ -23,7 +22,6 @@ export class CompanyService {
 
       if (!res.data) throw new UnauthorizedException('Token noto‘g‘ri');
 
-      // Kompaniya mavjudmi?
       const existing = await this.prisma.company.findFirst({
         where: { subdomain },
       });

@@ -6,19 +6,10 @@ import {
 import axios, { AxiosResponse } from 'axios';
 import { PrismaClient } from '@prisma/client';
 
-// OX API'dan qaytadigan mahsulot item va javob strukturasi
-interface ProductItem {
-  id: number;
-  name: string;
-  sku: string;
-  [key: string]: unknown; // qo‘shimcha fieldlar uchun
-}
-
 interface ProductResponse {
-  items: ProductItem[];
-  total: number;
+  data: any[];
+  total_count: number;
   page: number;
-  size: number;
 }
 
 @Injectable()
@@ -30,12 +21,10 @@ export class ProductService {
     page: number,
     size: number,
   ): Promise<ProductResponse> {
-    // Validatsiya
     if (size > 20) {
       throw new BadRequestException('size 20 dan katta bo‘lmasligi kerak');
     }
 
-    // Foydalanuvchini kompaniyalari bilan birga topamiz
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { companies: true },
